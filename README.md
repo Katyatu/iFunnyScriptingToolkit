@@ -209,6 +209,17 @@ Make sure you are in the "tools" folder of "iFunnyScriptingToolkit", and that yo
 
 <hr/>
 
+#### Get The Direct Media Link Of A Meme
+
+```bash
+./Get-Direct-Meme-Link.sh 'arg1'
+```
+
+- Gets the direct media link for the selected meme, allowing for direct download and embedding.
+  - _arg1_: Meme URL from 'Copy link' in app
+
+<hr/>
+
 #### Smile All Memes Of A Specific User (neutral/unsmiled → smiled)
 
 ```bash

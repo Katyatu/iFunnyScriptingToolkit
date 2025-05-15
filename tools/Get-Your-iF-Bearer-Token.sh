@@ -62,7 +62,7 @@ passwordencoded="$(urlencode $password)"
 
 # Sends a login request with your encoded login details
 printf "\nAttempting login with provided credentials... "
-resp=$(curl -s -H 'ifunny-project-id: iFunny' -H 'authorization: Basic MzYzMzM4NjUzNDYyMzMzNjY1NjYzNzY1MzQzNjYzNjVfTXNPSUozOVEyODoxZTg1Njg5MmY0NGVhYzFmMTFhNjc3NDM4OGIwMTEyYmM3MjBmYTQ4' -X POST https://api.ifnapp.com/v4/oauth2/token -d "grant_type=password&client_id=&username=$emailencoded&password=$passwordencoded");
+resp=$(curl -s -H 'ifunny-project-id: iFunny' -H "authorization: Basic $(cat ./.helpers/.oauth2)" -X POST https://api.ifnapp.com/v4/oauth2/token -d "grant_type=password&client_id=&username=$emailencoded&password=$passwordencoded");
 status=$(echo $resp | jq .status);
 accesstoken=$(echo $resp | jq .access_token);
 
