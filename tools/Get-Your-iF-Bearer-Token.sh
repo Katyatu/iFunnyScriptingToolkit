@@ -78,7 +78,7 @@ if [ "$status" = "403" ]; then
   read -n 1 -s -r
 
   printf "Attemping login with provided credentials again... "
-  resp=$(curl -s -H 'ifunny-project-id: iFunny' -H 'authorization: Basic MzYzMzM4NjUzNDYyMzMzNjY1NjYzNzY1MzQzNjYzNjVfTXNPSUozOVEyODoxZTg1Njg5MmY0NGVhYzFmMTFhNjc3NDM4OGIwMTEyYmM3MjBmYTQ4' -X POST https://api.ifnapp.com/v4/oauth2/token -d "grant_type=password&client_id=&username=$emailencoded&password=$passwordencoded");
+  resp=$(curl -s -H 'ifunny-project-id: iFunny' -H "authorization: Basic $(cat ./.helpers/.oauth2)" -X POST https://api.ifnapp.com/v4/oauth2/token -d "grant_type=password&client_id=&username=$emailencoded&password=$passwordencoded");
   accesstoken=$(echo $resp | jq .access_token | tr -d '"')
 
 fi
