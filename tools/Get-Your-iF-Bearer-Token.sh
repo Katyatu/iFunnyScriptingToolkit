@@ -13,6 +13,8 @@ echo "#                                        #"
 echo "#    DO NOT TRUST ANY OTHER SOURCES!     #"
 echo "##########################################"
 
+cd "$(dirname "$0")"
+
 #########################
 # User Input Validation #
 #########################

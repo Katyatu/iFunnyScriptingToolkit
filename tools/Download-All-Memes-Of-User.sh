@@ -13,6 +13,8 @@ echo "#                                        #"
 echo "#    DO NOT TRUST ANY OTHER SOURCES!     #"
 echo "##########################################"
 
+cd "$(dirname "$0")"
+
 ############
 # Clean Up #
 ############
@@ -50,7 +52,18 @@ fi
 # Variables #
 #############
 
-WORKDIR="$(pwd)/$1"
+if [ -n "$TERMUX_VERSION" ]; then
+  if [ -d "$HOME/storage/downloads" ] && [ -r "$HOME/storage/downloads" ]; then
+    WORKDIR="$HOME/storage/downloads/iFST/$1"
+  else
+    skipcleanup="true"
+    printf "Please run termux-setup-storage to allow Termux to download to your user Downloads folder.\n\n"
+    exit 1
+  fi
+else
+  WORKDIR="$(pwd)/$1"
+fi
+
 mkdir -p $WORKDIR
 
 ####################

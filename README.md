@@ -63,7 +63,7 @@ Since Android is based on Linux, these scripts can be executed on your mobile de
   pkg update && pkg upgrade -y && pkg clean
   ```
 
-- Next, you will need to allow Termux access to your local storage. This is needed for you to transfer any downloaded memes out of Termux's private storage and into your user storage for viewing. Run the following command and allow the storage access permission when it pops up:
+- Next, you will need to allow Termux access to your local storage. This is needed for Termux to download straight to your user Downloads folder. Run the following command and allow the storage access permission when it pops up:
 
   ```bash
   termux-setup-storage
@@ -84,16 +84,16 @@ Since Android is based on Linux, these scripts can be executed on your mobile de
 
 ### 3. Prep The Toolkit
 
-- Clone this repo:
+- Clone the latest release of this repo:
 
   ```bash
-  git clone https://github.com/Katyatu/iFunnyScriptingToolkit
+  git clone -b $(curl -s https://api.github.com/repos/Katyatu/iFunnyScriptingToolkit/tags | jq -r '.[0].name') https://github.com/Katyatu/iFunnyScriptingToolkit.git
   ```
 
 - Move into the toolkit:
 
   ```bash
-  cd iFunnyScriptingToolkit
+  cd iFunnyScriptingToolkit/tools
   ```
 
 - Make all scripts executable:
@@ -102,10 +102,13 @@ Since Android is based on Linux, these scripts can be executed on your mobile de
   chmod -R u+x ./
   ```
 
-- Move into the "tools" directory:
+- Add the toolkit to your $PATH and apply changes:
+
   ```bash
-  cd tools
+  echo 'export PATH=${PATH}:'"$(pwd)" >> ~/.bashrc; source ~/.bashrc
   ```
+
+  - Note: By adding the absolute path of `iFunnyScriptingToolkit/tools` to your $PATH, you no longer need to `cd iFunnyScriptingToolkit/tools` every time you start Termux. You will be able to call the scripts from where ever your current directory is at, such as `~/`. Just start by typing in the script name and hit `TAB` (the `⇌` button under `ESC`), it should autofill the rest of script name. If it doesn't autofill, check your spelling (case-sensitive) or double tap `⇌` to list possible matches.
 
 ### 4. Get Your "Bearer Token"
 
@@ -130,7 +133,7 @@ Since Android is based on Linux, these scripts can be executed on your mobile de
 - If you are satisfied, execute the script like so:
 
   ```bash
-  ./Get-Your-iF-Bearer-Token.sh 'ifunny@email.com' 'ifunnyPass'
+  Get-Your-iF-Bearer-Token.sh 'ifunny@email.com' 'ifunnyPass'
   ```
 
   - Please note the SINGLE quotes surrounding the arguments. Do NOT use DOUBLE quotes as the command line will interpret some symbols as console specific actions.
@@ -152,24 +155,24 @@ This section will assume you are familiar with a Debian-based environment, so in
 sudo apt install git jq imagemagick exiftool aria2 file
 ```
 
-### 2. Clone This Repo
+### 2. Clone This Repo's Latest Version
 
 ```bash
-git clone https://github.com/Katyatu/iFunnyScriptingToolkit
-cd iFunnyScriptingToolkit
+git clone -b $(curl -s https://api.github.com/repos/Katyatu/iFunnyScriptingToolkit/tags | jq -r '.[0].name') https://github.com/Katyatu/iFunnyScriptingToolkit.git
 ```
 
-### 3. Make All Scripts Executable
+### 3. Setup The Toolkit
 
 ```bash
+cd iFunnyScriptingToolkit/tools
 chmod -R u+x ./
+echo 'export PATH=${PATH}:'"$(pwd)" >> ~/.bashrc; source ~/.bashrc
 ```
 
 ### 4. Get Your "Bearer Token"
 
 ```bash
-cd tools
-./Get-Your-iF-Bearer-Token.sh 'ifunny@email.com' 'ifunnyPass'
+Get-Your-iF-Bearer-Token.sh 'ifunny@email.com' 'ifunnyPass'
 ```
 
 ## Usage
@@ -185,7 +188,7 @@ Make sure you are in the "tools" folder of "iFunnyScriptingToolkit", and that yo
 #### Get Your iFunny Account Bearer Token
 
 ```bash
-./Get-Your-iF-Bearer-Token.sh 'arg1' 'arg2'
+Get-Your-iF-Bearer-Token.sh 'arg1' 'arg2'
 ```
 
 - Gets your iFunny account's Bearer Token. Required for the below scripts to be authenticated with the API.
@@ -197,22 +200,22 @@ Make sure you are in the "tools" folder of "iFunnyScriptingToolkit", and that yo
 #### Download All Memes Of A Specific User
 
 ```bash
-./Download-All-Memes-Of-User.sh 'arg1'
+Download-All-Memes-Of-User.sh 'arg1'
 ```
 
 - Downloads every meme the selected user has posted.
   - _arg1_: Name of user
-- Note: If using Termux on Android, in order to move the download folder out of Termux and into your device's general downloads folder, run the following command after the script finishes:
-  - ```bash
-    mv 'arg1' ~/storage/downloads
-    ```
+- Note: The download path depends on the running device:
+  - Android: `Files → Downloads → iFST`
+    - Use the app "Cx File Explorer" if your default Files app shows the folder empty.
+  - Linux: `iFunnyScriptingToolkit/tools`
 
 <hr/>
 
 #### Get The Direct Media Link Of A Meme
 
 ```bash
-./Get-Direct-Meme-Link.sh 'arg1'
+Get-Direct-Meme-Link.sh 'arg1'
 ```
 
 - Gets the direct media link for the selected meme, allowing for direct download and embedding.
@@ -223,7 +226,7 @@ Make sure you are in the "tools" folder of "iFunnyScriptingToolkit", and that yo
 #### Smile All Memes Of A Specific User (neutral/unsmiled → smiled)
 
 ```bash
-./Smile-All-Memes-Of-User.sh 'arg1'
+Smile-All-Memes-Of-User.sh 'arg1'
 ```
 
 - Smiles every meme the selected user has posted.
@@ -234,7 +237,7 @@ Make sure you are in the "tools" folder of "iFunnyScriptingToolkit", and that yo
 #### Desmile All Memes Of A Specific User (smiled → neutral)
 
 ```bash
-./Desmile-All-Memes-Of-User.sh 'arg1'
+Desmile-All-Memes-Of-User.sh 'arg1'
 ```
 
 - Desmiles every meme the selected user has posted (not to be confused with *un*smile).
@@ -245,7 +248,7 @@ Make sure you are in the "tools" folder of "iFunnyScriptingToolkit", and that yo
 #### Unsmile All Memes Of A Specific User (neutral/smiled → unsmiled)
 
 ```bash
-./Unsmile-All-Memes-Of-User.sh 'arg1'
+Unsmile-All-Memes-Of-User.sh 'arg1'
 ```
 
 - Unsmiles every meme the selected user has posted.
@@ -256,7 +259,7 @@ Make sure you are in the "tools" folder of "iFunnyScriptingToolkit", and that yo
 #### Deunsmile All Memes Of A Specific User (unsmiled → neutral)
 
 ```bash
-./Deunsmile-All-Memes-Of-User.sh 'arg1'
+Deunsmile-All-Memes-Of-User.sh 'arg1'
 ```
 
 - Deunsmiles every meme the selected user has posted.
@@ -267,7 +270,7 @@ Make sure you are in the "tools" folder of "iFunnyScriptingToolkit", and that yo
 #### Desmile All Memes You Have Smiled
 
 ```bash
-./Clear-My-Smiled-Memes.sh
+Clear-My-Smiled-Memes.sh
 ```
 
 - Desmiles every meme in the smiles category of your profile.
@@ -277,7 +280,7 @@ Make sure you are in the "tools" folder of "iFunnyScriptingToolkit", and that yo
 #### Delete All Of Your Unpinned Memes
 
 ```bash
-./Delete-All-Of-Your-Unpinned-Memes.sh
+Delete-All-Of-Your-Unpinned-Memes.sh
 ```
 
 - Deletes every unpinned meme you have ever posted.
@@ -288,11 +291,11 @@ Make sure you are in the "tools" folder of "iFunnyScriptingToolkit", and that yo
 ### Examples
 
 ```bash
-./Smile-All-Memes-Of-User.sh 'cirke'
+Smile-All-Memes-Of-User.sh 'cirke'
 ```
 
 ```bash
-./Unsmile-All-Memes-Of-User.sh 'ColDirtybastard'
+Unsmile-All-Memes-Of-User.sh 'ColDirtybastard'
 ```
 
 ## Notes
