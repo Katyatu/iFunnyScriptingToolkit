@@ -29,6 +29,23 @@ if [[ $1 != https://ifunny.co/video/* && $1 != https://ifunny.co/picture/* && $1
     exit 1
 fi
 
+#############
+# Variables #
+#############
+
+if [ -n "$TERMUX_VERSION" ]; then
+  if [ -d "$HOME/storage/downloads" ] && [ -r "$HOME/storage/downloads" ]; then
+    WORKDIR="$HOME/storage/downloads/iFST/"
+  else
+    printf "Please run termux-setup-storage to allow Termux to download to your user Downloads folder.\n\n"
+    exit 1
+  fi
+else
+  WORKDIR="$(dirname "$(pwd)")/downloads"
+fi
+
+mkdir -p $WORKDIR
+
 ###############################
 # Parse Direct Link From HTML #
 ###############################
@@ -50,4 +67,31 @@ else
   direct=$(echo "https://imageproxy.ifunny.co/crop:x-20/images/$(basename $(echo $html | jq .seo.image | tr -d '"'))") # Image
 fi
 
-printf "Done!\n\n$direct\n\nThank you for using my script!\n-KF\n\n"
+##################
+# Download Meme? #
+##################
+
+printf "Done!\n\n$direct\n\nDo you want to save this to local storage? (y/N): "
+read -p "" answer
+
+if [[ "$answer" =~ ^[Yy]$ ]]; then
+  printf "\nDownloading and saving... "
+
+  aria2c \
+    -d "$WORKDIR" \
+    --max-concurrent-downloads=16 \
+    --max-connection-per-server=2 \
+    --min-split-size=1M \
+    --split=16 \
+    --max-tries=3 \
+    --retry-wait=2 \
+    --timeout=30 \
+    --auto-file-renaming=false \
+    --user-agent="Mozilla/5.0" \
+    --quiet \
+    "$direct"
+  
+  printf "Done!\n\n$WORKDIR/$(basename "$direct")\n\nThank you for using my script!\n-KF\n\n"
+else
+  printf "\nThank you for using my script!\n-KF\n\n"
+fi

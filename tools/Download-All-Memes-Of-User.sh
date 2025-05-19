@@ -61,7 +61,7 @@ if [ -n "$TERMUX_VERSION" ]; then
     exit 1
   fi
 else
-  WORKDIR="$(pwd)/$1"
+  WORKDIR="$(dirname "$(pwd)")/downloads/$1"
 fi
 
 mkdir -p $WORKDIR
