@@ -277,6 +277,18 @@ Clear-My-Smiled-Memes.sh
 
 <hr/>
 
+#### Unsubscribe From All Your Subscriptions
+
+```bash
+Clear-My-Subscriptions.sh
+```
+
+- Unsubscribes you from each account found in your subscriptions list.
+- Starts from the list's top and sequentially works its way down to the bottom.
+- `CTRL+C` to stop it whenever, otherwise it will unsubscribe you from everything.
+
+<hr/>
+
 #### Delete All Of Your Unpinned Memes
 
 ```bash
