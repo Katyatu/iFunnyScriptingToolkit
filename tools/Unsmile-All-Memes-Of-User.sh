@@ -91,19 +91,23 @@ while IFS= read -r id <&3 && IFS= read -r is_unsmiled <&4; do
         # Human Verification Check #
         ############################
         if [ "$status" = "403" ]; then
-          captcha_url=$(echo $resp | jq .data.captcha_url | tr -d '"')
-          printf "403 - Human verification needed\n\nOpen the following link in your web browser and complete the verification:\n\n  $captcha_url\n\nThe verification page may not close or indicate success, but will indicate failure.\nAssume no error after completion means you passed.\nWhen you pass, press any key to continue...\n\n"
-          read -n 1 -s -r
-
-          resp=$(curl -s -H "authorization: Bearer $bearertoken" -H 'ifunny-project-id: iFunny' -X PUT "https://api.ifnapp.com/v4/content/$id/unsmiles")
-          status=$(echo $resp | jq .status)
-          if [ "$status" != "200" ]; then
-            printf "Failed.\n\n  "
-            echo $resp | jq .error_description
-            printf "\n"
-            exit 1
+          if [ "$(echo $resp | jq .error | tr -d '"')" = "you_are_blocked" ]; then
+            printf "Failed. The creator of this meme has blocked you.\n"
           else
-            echo "Unsmiled $id"
+            captcha_url=$(echo $resp | jq .data.captcha_url | tr -d '"')
+            printf "403 - Human verification needed\n\nOpen the following link in your web browser and complete the verification:\n\n  $captcha_url\n\nThe verification page may not close or indicate success, but will indicate failure.\nAssume no error after completion means you passed.\nWhen you pass, press any key to continue...\n\n"
+            read -n 1 -s -r
+
+            resp=$(curl -s -H "authorization: Bearer $bearertoken" -H 'ifunny-project-id: iFunny' -X PUT "https://api.ifnapp.com/v4/content/$id/unsmiles")
+            status=$(echo $resp | jq .status)
+            if [ "$status" != "200" ]; then
+              printf "Failed.\n\n  "
+              echo $resp | jq .error_description
+              printf "\n"
+              exit 1
+            else
+              echo "Unsmiled $id"
+            fi
           fi
         ####################
         # Some Other Error #
