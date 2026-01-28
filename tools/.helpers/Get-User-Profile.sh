@@ -28,11 +28,17 @@ if [ ${#1} -ne 24 ]; then
   userid=$(echo $searchresp | jq .data.compilations_set[0].value.context.items[0].id | tr -d '"')
   usernick=$(echo $searchresp | jq .data.compilations_set[0].value.context.items[0].nick | tr -d '"')
 
+  if [[ -z "$userid" || "$userid" == "null" ]]; then
+    html=$(curl -s --user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36" "https://ifunny.co/user/$1?s=cl" | grep 'window.__INITIAL_STATE__=' | cut -c 38- | rev | cut -c 132- | rev)
+    userid=$(echo $html | jq .user.data.id | tr -d '"')
+    usernick=$(echo $html | jq .user.data.nick | tr -d '"')
+  fi
+
   if [[ "${1,,}" != "${usernick,,}" || -z "$userid" ]]; then
     printf "error. Please check the username you are passing in.\n"
     exit 1
   fi
-  
+
   printf "$(echo $userid)\n\n"
 
 else

@@ -54,7 +54,7 @@ fi
 
 if [ -n "$TERMUX_VERSION" ]; then
   if [ -d "$HOME/storage/downloads" ] && [ -r "$HOME/storage/downloads" ]; then
-    WORKDIR="$HOME/storage/downloads/iFST/$1"
+    WORKDIR="$HOME/storage/downloads/.iFST/$1"
   else
     skipcleanup="true"
     printf "Please run termux-setup-storage to allow Termux to download to your user Downloads folder.\n\n"

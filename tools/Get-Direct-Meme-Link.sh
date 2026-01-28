@@ -35,7 +35,7 @@ fi
 
 if [ -n "$TERMUX_VERSION" ]; then
   if [ -d "$HOME/storage/downloads" ] && [ -r "$HOME/storage/downloads" ]; then
-    WORKDIR="$HOME/storage/downloads/iFST/"
+    WORKDIR="$HOME/storage/downloads/.iFST/"
   else
     printf "Please run termux-setup-storage to allow Termux to download to your user Downloads folder.\n\n"
     exit 1
@@ -53,7 +53,7 @@ mkdir -p $WORKDIR
 printf "\nGetting direct media link for '$1'... "
 
 html=$(curl -s --user-agent "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36" "$1" | grep 'window.__INITIAL_STATE__=' | cut -c 38- | rev | cut -c 132- | rev);
-type=$(echo $html | jq .seo.type | tr -d '"')
+type=$(echo $html | jq .seo.type | tr -d '"');
 if [[ -z "$html" || "$type" = "null" ]]; then
   printf "Failed.\n\nDouble check the link you provided, it should look like:\n\nPicture: 'https://ifunny.co/picture/123456789?s=cl'\n    Gif: 'https://ifunny.co/gif/123456789?s=cl'\n  Video: 'https://ifunny.co/video/123456789?s=cl'\n\n"
   exit 1
